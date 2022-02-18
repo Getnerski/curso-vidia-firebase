@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/9.6.6/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/9.6.6/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/9.6.6/firebase-database-compat.js"></script>
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+  </head>
+  <body>
+    <input id="input-curso">
+    <button onclick="adicionar()" >Adicionar Curso</button>
+    <div id="lista">
+
+    </div>
+
+    <script>
+      const nome = document.getElementById("input-curso")
+      const lista = document.getElementById("lista")
+      var referencia = null
+      window.onload = function(){
+        referencia = firebase.database().ref('cursos/')
+        referencia.on('value', (snapshot) => {
+          console.log(snapshot.val())
+          var texto = ""
+          snapshot.forEach(element => {
+            texto += "<li>" + element.val().nome + "</li>"
+          });
+          lista.innerHTML = texto
+        })
+      }
+
+      function adicionar() {
+          console.log(nome.value)
+          referencia.push(
+            {
+              nome: nome.value,
+              active: true
+            }
+          )
+        }
+    </script>
+  </body>
+  
+</html>
